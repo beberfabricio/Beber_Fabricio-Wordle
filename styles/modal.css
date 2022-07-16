@@ -58,7 +58,7 @@
 .modal-close{
     text-decoration: none;
     color: var(--blanco);
-    background-color: var(--azul);
+    background-color: var(--violeta);
     padding: 16px 48px;
     border: 1px solid;
     border-radius: 6px;
@@ -69,6 +69,6 @@
 }
 
 .modal-close:hover{
-    color: var(--azul);
+    color: var(--violeta);
     background-color: var(--blanco);
 }

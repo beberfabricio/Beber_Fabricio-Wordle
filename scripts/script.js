@@ -1,8 +1,11 @@
 function obtenerElementos(){
     inputs = document.querySelectorAll("input");
     filas = document.querySelectorAll("fieldset");
-    modal = document.getElementById("modal");
-    btnCerrarModal = document.getElementById("modalClose");
+    modal = document.getElementById("sctModal");
+    modalClose = document.getElementsByClassName("modal-close")[0];
+    modalTitle = document.getElementsByClassName("modal-title")[0];
+    modalText = document.getElementsByClassName("modal-text")[0];
+    modalImage = document.getElementsByClassName("modal-img")[0];
 }
 let palabra = "holas";
 var matriz = [
@@ -141,14 +144,39 @@ function revisarResultado(respuesta,f){
 function siguienteFila(f,letrasCorrectas){
     filas[f].disabled = true;
     if (letrasCorrectas === palabra.length) {
-        alert("Ganaste");
+        mostrarModal("win");
         return;
     }
     fSig = f + 1;
     if (fSig == 6) {
-        alert("Perdiste");
+        mostrarModal("lose");
         return;
     }
     filas[fSig].disabled = false;
     document.getElementById(`f${fSig}c0`).focus();
+}
+
+function mostrarModal(resultado){
+    if (resultado == "win") {
+        modalImage.src = "images/success_icon.png";
+        modalTitle.innerHTML = "¡Ganaste!"
+        modalTitle.style.color="blue";
+        modalText.innerHTML = "Acertaste! La palabra era " + palabra.toUpperCase();
+        modal.classList.add("modal-show");
+    }else{
+        modalImage.src = "images/error_icon.png";
+        modalTitle.innerHTML = "¡Perdiste!"
+        modalTitle.style.color="red";
+        modalText.innerHTML = "La palabra era " + palabra.toUpperCase();
+        modal.classList.add("modal-show");
+    }
+    modalClose.onclick = function(){
+        modal.classList.remove("modal-show");
+    }
+    window.onclick = function(e) {
+        if (e.target == modal) {
+            modal.classList.remove("modal-show");
+        }
+    }
+    return;
 }

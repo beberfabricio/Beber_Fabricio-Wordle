@@ -7,11 +7,29 @@
         <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="styles/reset.css">
         <link rel="stylesheet" href="styles/style.css">
+        <link rel="stylesheet" href="styles/modal.css">
         <script src="scripts/script.js"></script>
-        <title>Juegardo</title>
+        <title>Wordle</title>
     </head>
     <body>
-        <form class="form" id="form-wordle">
+        <header>
+            <h1>Final LPPA</h1>
+            <nav>
+                <a href="#" target="_blank">Inicio</a>
+                <a href="#" target="_blank">Ubicación</a>
+                <a href="#" target="_blank">Quiénes somos</a>
+                <a href="#" target="_blank">Contacto</a>
+            </nav>
+        </header>
+        <section class="modal" id="sctModal">
+            <div class="modal-container">
+                <h2 class="modal-title"></h2>
+                <img class="modal-img" src="" alt="Icono de éxito/error">
+                <p class="modal-text"></p>
+                <span class="modal-close">Cerrar</span>
+            </div>
+        </section>
+        <form class="form">
             <fieldset id="row0">
                 <input maxlength="1" id="f0c0">
                 <input maxlength="1" id="f0c1">
@@ -55,5 +73,10 @@
                 <input maxlength="1" id="f5c4">
             </fieldset>
         </form>
+        <footer>
+            <p>
+                Final LPPA ISI UAI (Universidad Abierta Interamericana) 2022
+            </p>
+        </footer>
     </body>
 </html>
