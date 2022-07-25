@@ -4,12 +4,12 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="styles/reset.css">
         <link rel="stylesheet" href="styles/style.css">
-        <link rel="stylesheet" href="styles/modal.css">
-        <script src="scripts/script.js"></script>
-        <title>Wordle</title>
+        <link rel="stylesheet" href="styles/index.css">
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+        <script src="scripts/index.js"></script>
+        <title>Ingreso</title>
     </head>
     <body>
         <header>
@@ -21,57 +21,16 @@
                 <a href="#" target="_blank">Contacto</a>
             </nav>
         </header>
-        <section class="modal" id="sctModal">
-            <div class="modal-container">
-                <h2 class="modal-title"></h2>
-                <img class="modal-img" src="" alt="Icono de éxito/error">
-                <p class="modal-text"></p>
-                <span class="modal-close">Cerrar</span>
-            </div>
-        </section>
         <form class="form">
-            <fieldset id="row0">
-                <input maxlength="1" id="f0c0">
-                <input maxlength="1" id="f0c1">
-                <input maxlength="1" id="f0c2">
-                <input maxlength="1" id="f0c3">
-                <input maxlength="1" id="f0c4">
-            </fieldset>
-            <fieldset id="row1">
-                <input maxlength="1" id="f1c0">
-                <input maxlength="1" id="f1c1">
-                <input maxlength="1" id="f1c2">
-                <input maxlength="1" id="f1c3">
-                <input maxlength="1" id="f1c4">
-            </fieldset>
-            <fieldset id="row2">
-                <input maxlength="1" id="f2c0">
-                <input maxlength="1" id="f2c1">
-                <input maxlength="1" id="f2c2">
-                <input maxlength="1" id="f2c3">
-                <input maxlength="1" id="f2c4">
-            </fieldset>
-            <fieldset id="row3">
-                <input maxlength="1" id="f3c0">
-                <input maxlength="1" id="f3c1">
-                <input maxlength="1" id="f3c2">
-                <input maxlength="1" id="f3c3">
-                <input maxlength="1" id="f3c4">
-            </fieldset>
-            <fieldset id="row4">
-                <input maxlength="1" id="f4c0">
-                <input maxlength="1" id="f4c1">
-                <input maxlength="1" id="f4c2">
-                <input maxlength="1" id="f4c3">
-                <input maxlength="1" id="f4c4">
-            </fieldset>
-            <fieldset id="row5">
-                <input maxlength="1" id="f5c0">
-                <input maxlength="1" id="f5c1">
-                <input maxlength="1" id="f5c2">
-                <input maxlength="1" id="f5c3">
-                <input maxlength="1" id="f5c4">
-            </fieldset>
+            <h2 class="form-title">Ingreso al juego</h1>
+                <fieldset class="form-group">
+                    <input class="form-txt" type="text" id="txtNombre" placeholder=" ">
+                    <label class="form-lblTxt" for="txtNombre">Nombre</label>
+                    <label class="form-lblError hidden" for="txtNombre">Ingrese un nombre válido</label>
+                </fieldset>
+                <input class="form-btn" type="submit" value="¡JUGAR!" id="ingresar">
+                <img class="form-img hidden" src="images/loading.gif" alt="loading logo">
+            </div>
         </form>
         <footer>
             <p>
