@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="styles/style.css">
         <link rel="stylesheet" href="styles/wordle.css">
         <link rel="stylesheet" href="styles/modal.css">
-        <script src="scripts/script.js"></script>
+        <script src="scripts/wordle.js"></script>
         <title>Wordle</title>
     </head>
     <body>
@@ -25,11 +25,13 @@
         <section class="modal" id="sctModal">
             <div class="modal-container">
                 <h2 class="modal-title"></h2>
-                <img class="modal-img" src="" alt="Icono de éxito/error">
+                <img class="modal-img" src="" alt="Icono de éxito/guardado/error">
                 <p class="modal-text"></p>
                 <span class="modal-close">Cerrar</span>
             </div>
         </section>
+        <p class="nombre-cronometro"></p>
+        <p class="nombre-cronometro">Iniciando cronómetro...</p>
         <form class="form">
             <fieldset id="row0">
                 <input maxlength="1" id="f0c0">
@@ -73,6 +75,8 @@
                 <input maxlength="1" id="f5c3">
                 <input maxlength="1" id="f5c4">
             </fieldset>
+            <input type="button" class="btnGuardar" value="Guardar partida">
+            <img class="gifLoad hidden" src="images/loading.gif" alt="loading logo">
         </form>
         <footer>
             <p>
