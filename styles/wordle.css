@@ -45,6 +45,10 @@
     background-color: var(--blanco);
 }
 
+.disabled{
+    cursor:not-allowed;
+}
+
 .gifLoad{
     width: 30%;
     height: 30%;

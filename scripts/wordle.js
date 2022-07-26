@@ -14,6 +14,11 @@ function obtenerElementos(){
     gifLoad = document.getElementsByClassName("gifLoad")[0];
     pNombre = document.getElementsByClassName("nombre-cronometro")[0];
     pCronometro = document.getElementsByClassName("nombre-cronometro")[1];
+    if (localStorage.partidasGuardadas != null) {
+        guardadasLS = JSON.parse(localStorage.partidasGuardadas);
+    }else {
+        guardadasLS = [];
+    }
 }
 
 let palabra = "holas";
@@ -25,7 +30,7 @@ var matriz = [
     [0,0,0,0,0],
     [0,0,0,0,0],
     [0,0,0,0,0]
-]
+];
 
 var respuestas = [
     [0,0,0,0,0],
@@ -34,7 +39,7 @@ var respuestas = [
     [0,0,0,0,0],
     [0,0,0,0,0],
     [0,0,0,0,0]
-]
+];
 
 var colorTablero = [
     [0,0,0,0,0],
@@ -43,7 +48,7 @@ var colorTablero = [
     [0,0,0,0,0],
     [0,0,0,0,0],
     [0,0,0,0,0]
-]
+];
 
 var color = {
     VERDE: 1,
@@ -51,44 +56,69 @@ var color = {
     GRIS: 3
 }
 
+var partidaCargada = null;
+var nroPartida;
 var cronometro;
+var mins;
+var segs;
 
 window.onload = () => {
     obtenerElementos();
-    for (let i = 0; i < filas.length; i++) {
-        if (i != 0) {
-            filas[i].disabled = true;
+    for (let i = 0; i < guardadasLS.length; i++) {
+        if (guardadasLS[i].jugador == sessionStorage.nombre) {
+            partidaCargada = guardadasLS[i];
+            nroPartida = i;
         }
     }
+    if (partidaCargada != null) {
+        cargarPartidaGuardada();
+    }else {
+        for (let i = 0; i < filas.length; i++) {
+            if (i != 0) {
+                filas[i].disabled = true;
+            }
+        }
+        iniciarCronometro(0,0);
+        inputs[0].focus();
+        inicio();
+    }        
     pNombre.innerHTML = `Hola ${sessionStorage.nombre}`;
-    var mins = 0;
-    var segs = 0;
-    iniciarCronometro(mins,segs);
-    inputs[0].focus();
     inputs.forEach(x => x.onkeyup = saltarInput);
-    inicio();
     btnGuardar.onclick = (e) => {
+        e.preventDefault();
         gifLoad.classList.toggle("hidden",false);
         setTimeout(guardarPartida,500);
     }
 }
 
 function cargarPartidaGuardada(){
-    matriz = JSON.parse(localStorage.partidasGanadas)[0].tablero;
-    colorTablero = JSON.parse(localStorage.partidasGanadas)[0].color;
+    respuestas = partidaCargada.tablero;
+    colorTablero = partidaCargada.color;
+    let filaCargada = null;
     for (let f = 0; f < matriz.length; f++) {
         for (let c = 0; c < matriz[f].length; c++) {
             let input = document.getElementById(`f${f}c${c}`);
-            if(matriz[f][c] != 0){
-                input.value = matriz[f][c];
+            if(respuestas[f][c] == 0){
+                if (filaCargada == null) {
+                    filaCargada = f;
+                    for (let i = 0; i < filas.length; i++) {
+                        if (i != f) {
+                            filas[i].disabled = true;
+                        }
+                    }
+                    document.getElementById(`f${f}c0`).focus();
+                }
+            }else {
+                input.value = respuestas[f][c];
             }
         }
+
     }
     pintarTablero();
-    mins = JSON.parse(localStorage.partidasGanadas)[0].minutos;
-    segs = JSON.parse(localStorage.partidasGanadas)[0].segundos;
+    mins = partidaCargada.minutos;
+    segs = partidaCargada.segundos;
     iniciarCronometro(mins,segs);
-    inicio();
+    inicio();        
 }
 
 function saltarInput(e){
@@ -178,7 +208,6 @@ function revisarResultado(respuesta,f){
     })
     pintarTablero();
     siguienteFila(f,letrasCorrectas);
-    console.log(f);
 }
 
 function siguienteFila(f,letrasCorrectas){
@@ -197,32 +226,37 @@ function siguienteFila(f,letrasCorrectas){
 }
 
 function mostrarModal(resultado){
-    if (resultado == "win") {
-        modalImage.src = "images/success_icon.png";
-        modalTitle.innerHTML = "¡Ganaste!"
-        modalTitle.style.color = "blue";
-        modalText.innerHTML = "Acertaste! La palabra era " + palabra.toUpperCase() + ", tu partida ha quedado registrada.";
-        modal.classList.add("modal-show");
-        guardarPartidaGanada();
-    }else if(resultado == "lose"){
-        modalImage.src = "images/error_icon.png";
-        modalTitle.innerHTML = "¡Perdiste!"
-        modalTitle.style.color = "red";
-        modalText.innerHTML = "La palabra era " + palabra.toUpperCase();
-        modal.classList.add("modal-show");
-    }else if(resultado == "save"){
-        modalImage.src = "images/saved_icon.png";
-        modalTitle.innerHTML = "¡Partida guardada!"
-        modalTitle.style.color = "green";
-        modalText.innerHTML = sessionStorage.nombre + ", tu partida ha sido guardada. Puedes cargarla ingresando tu nombre nuevamente.";
-        modal.classList.add("modal-show");
-    }else {
-        clearInterval(cronometro);
-        modalImage.src = "images/error_icon.png";
-        modalTitle.innerHTML = "¡Error!"
-        modalTitle.style.color = "red";
-        modalText.innerHTML = "Aún no hay nada para guardar! Por favor, comienza a jugar para poder guardar la partida.";
-        modal.classList.add("modal-show");
+    switch (resultado) {
+        case "win":
+            modalImage.src = "images/success_icon.png";
+            modalTitle.innerHTML = "¡Ganaste!"
+            modalTitle.style.color = "blue";
+            modalText.innerHTML = "Acertaste! La palabra era " + palabra.toUpperCase() + ", tu partida ha quedado registrada.";
+            modal.classList.add("modal-show");
+            guardarPartidaGanada();
+        break;
+        case "lose":
+            modalImage.src = "images/error_icon.png";
+            modalTitle.innerHTML = "¡Perdiste!"
+            modalTitle.style.color = "red";
+            modalText.innerHTML = "La palabra era " + palabra.toUpperCase();
+            modal.classList.add("modal-show");
+        break;
+        case "save":
+            modalImage.src = "images/saved_icon.png";
+            modalTitle.innerHTML = "¡Partida guardada!"
+            modalTitle.style.color = "green";
+            modalText.innerHTML = sessionStorage.nombre + ", tu partida ha sido guardada. Puedes cargarla ingresando tu nombre nuevamente.";
+            modal.classList.add("modal-show");
+        break;
+        case "error":
+            clearInterval(cronometro);
+            modalImage.src = "images/error_icon.png";
+            modalTitle.innerHTML = "¡Error!"
+            modalTitle.style.color = "red";
+            modalText.innerHTML = "Aún no hay nada para guardar! Por favor, comienza a jugar para poder guardar la partida.";
+            modal.classList.add("modal-show");
+        break;
     }
 
     if (resultado != "error") {
@@ -246,8 +280,6 @@ function mostrarModal(resultado){
             }
         }
     }
-
-    return;
 }
 
 function iniciarCronometro(m,s){
@@ -256,11 +288,10 @@ function iniciarCronometro(m,s){
             s = 0;
             m++;
         }        
-        pCronometro.innerHTML = `Tu tiempo es ${m}:${s}`;
-        s++;
+        pCronometro.innerHTML = `Tu tiempo es ${m.toString().padStart(2,"0")}:${s.toString().padStart(2,"0")}`;
         mins = m;
         segs = s;
-        console.log(segs, s);
+        s++;
     },1000)
 }
 
@@ -270,6 +301,7 @@ function detenerJuego(){
         x.disabled = true;
     });
     btnGuardar.disabled = true;
+    btnGuardar.classList.add("disabled");
 }
 
 function guardarPartida(){
@@ -283,6 +315,7 @@ function guardarPartida(){
         jugador: sessionStorage.nombre,
         palabra: palabra,
         tablero: respuestas,
+        color: colorTablero,
         minutos: mins,
         segundos: segs,
         intentos: 3
@@ -292,8 +325,14 @@ function guardarPartida(){
     }else {
         var partidasGuardadas = JSON.parse(localStorage.partidasGuardadas);
     }
-    partidasGuardadas.push(partida);
-    localStorage.partidasGuardadas = JSON.stringify(partidasGuardadas);
+    if (partidaCargada == null) {
+        partidasGuardadas.push(partida);
+        localStorage.partidasGuardadas = JSON.stringify(partidasGuardadas);
+    }else {
+        partidasGuardadas[nroPartida] = partida;
+        localStorage.partidasGuardadas = JSON.stringify(partidasGuardadas);
+    }
+
     mostrarModal("save");
 }
 
@@ -316,6 +355,5 @@ function guardarPartidaGanada(){
         var partidasGanadas = JSON.parse(localStorage.partidasGanadas);
     }
     partidasGanadas.push(ganada);
-    console.log(partidasGanadas);
     localStorage.partidasGanadas = JSON.stringify(partidasGanadas);
 }
