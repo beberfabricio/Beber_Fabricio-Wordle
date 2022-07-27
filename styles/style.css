@@ -34,10 +34,10 @@ header nav{
     display:inherit;
     align-items: center;
     justify-content: space-around;
-    width: 500px;
+    width: 400px;
 }
 
-header nav a{
+header nav .btnNav{
     text-decoration: none;
     font-weight: 400;
     font-size: 22px;
@@ -45,7 +45,7 @@ header nav a{
     transition: color .3s;
 }
 
-header nav a:hover{
+header nav .btnNav:hover{
     color: var(--blanco);
     cursor: pointer;
 }

@@ -14,6 +14,9 @@ function obtenerElementos(){
     gifLoad = document.getElementsByClassName("gifLoad")[0];
     pNombre = document.getElementsByClassName("nombre-cronometro")[0];
     pCronometro = document.getElementsByClassName("nombre-cronometro")[1];
+    btnInicio = document.getElementsByClassName("btnNav")[0];
+    btnGanadores = document.getElementsByClassName("btnNav")[1];
+    btnContacto = document.getElementsByClassName("btnNav")[2];
     if (localStorage.partidasGuardadas != null) {
         guardadasLS = JSON.parse(localStorage.partidasGuardadas);
     }else {
@@ -89,6 +92,12 @@ window.onload = () => {
         gifLoad.classList.toggle("hidden",false);
         setTimeout(guardarPartida,500);
     }
+    btnInicio.onclick = () => {
+        sessionStorage.clear();
+        location = "./index.html";
+    }
+    btnGanadores.onclick = () => location = "./ganadores.html";
+    btnContacto.onclick = () => location = "./contacto.html";
 }
 
 function cargarPartidaGuardada(){
@@ -320,19 +329,18 @@ function guardarPartida(){
         segundos: segs,
         intentos: 3
     }
-    if (localStorage.partidasGuardadas == null) {
-        var partidasGuardadas = [];
-    }else {
-        var partidasGuardadas = JSON.parse(localStorage.partidasGuardadas);
-    }
+    // if (localStorage.partidasGuardadas == null) {
+    //     var partidasGuardadas = [];
+    // }else {
+    //     var partidasGuardadas = guardadasLS;
+    // }
     if (partidaCargada == null) {
-        partidasGuardadas.push(partida);
-        localStorage.partidasGuardadas = JSON.stringify(partidasGuardadas);
+        guardadasLS.push(partida);
+        localStorage.partidasGuardadas = JSON.stringify(guardadasLS);
     }else {
-        partidasGuardadas[nroPartida] = partida;
-        localStorage.partidasGuardadas = JSON.stringify(partidasGuardadas);
+        guardadasLS[nroPartida] = partida;
+        localStorage.partidasGuardadas = JSON.stringify(guardadasLS);
     }
-
     mostrarModal("save");
 }
 
@@ -356,4 +364,8 @@ function guardarPartidaGanada(){
     }
     partidasGanadas.push(ganada);
     localStorage.partidasGanadas = JSON.stringify(partidasGanadas);
+    if (partidaCargada != null) {
+        guardadasLS.splice(nroPartida,1);
+        localStorage.partidasGuardadas = JSON.stringify(guardadasLS);
+    }
 }
