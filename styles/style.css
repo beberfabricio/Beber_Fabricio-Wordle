@@ -5,7 +5,10 @@
     --azul: rgb(56, 102, 242);
     --blanco: rgb(255, 255, 255);
     --negro: rgb(0, 0, 0);
+    --gris: rgb(221, 221, 221);
     --violeta: rgb(143, 143, 229);
+    --violetaClaro: rgb(170, 170, 236);
+    --violetaOscuro: rgb(71, 71, 147);
 }
 
 body{
