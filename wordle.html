@@ -6,9 +6,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="styles/reset.css">
+        <link rel="stylesheet" href="styles/modal.css">
         <link rel="stylesheet" href="styles/style.css">
         <link rel="stylesheet" href="styles/wordle.css">
-        <link rel="stylesheet" href="styles/modal.css">
+
         <script src="scripts/wordle.js"></script>
         <title>Wordle</title>
     </head>
@@ -16,9 +17,10 @@
         <header>
             <h1>Final LPPA</h1>
             <nav>
-                <span class="btnNav">Inicio</span>
-                <span class="btnNav">Ganadores</span>
-                <span class="btnNav">Contacto</span>
+                <a class="btnNav">Inicio</a>
+                <a class="btnNav">Ganadores</a>
+                <a class="btnNav">Contacto</a>
+                <a class="btnNav" target="_blank" href="https://github.com/beberfabricio/Beber_Fabricio-Wordle">Código</a>
             </nav>
         </header>
         <section class="modal" id="sctModal">
@@ -26,7 +28,9 @@
                 <h2 class="modal-title"></h2>
                 <img class="modal-img" src="" alt="Icono de éxito/guardado/error">
                 <p class="modal-text"></p>
-                <span class="modal-close">Cerrar</span>
+                <span class="modal-btn">Cerrar</span>
+                <span class="modal-btn hidden">Cargar partida</span>
+                <span class="modal-btn hidden">Nueva partida</span>
             </div>
         </section>
         <p class="nombre-cronometro"></p>

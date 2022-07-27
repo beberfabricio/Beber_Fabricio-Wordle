@@ -5,6 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styles/reset.css">
+        <link rel="stylesheet" href="styles/modal.css">
         <link rel="stylesheet" href="styles/style.css">
         <link rel="stylesheet" href="styles/index.css">
         <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
@@ -15,11 +16,25 @@
         <header>
             <h1>Final LPPA</h1>
             <nav>
-                <span class="btnNav">Inicio</span>
-                <span class="btnNav">Ganadores</span>
-                <span class="btnNav">Contacto</span>
+                <a class="btnNav">Inicio</a>
+                <a class="btnNav">Ganadores</a>
+                <a class="btnNav">Contacto</a>
+                <a class="btnNav" target="_blank" href="https://github.com/beberfabricio/Beber_Fabricio-Wordle">Código</a>
             </nav>
         </header>
+        <section class="modal" id="sctModal">
+            <div class="modal-container">
+                <h2 class="modal-title"></h2>
+                <p class="modal-text">Hola <span id="nombre"></span>, hemos encontrado una partida que has guardado el 
+                día <span id="fecha"></span> a las <span id="hora"></span> hs.</p>
+                <p class="modal-text">¿Quieres cargarla o quieres iniciar una nueva?</p>
+                <span class="modal-btn">Cargar partida</span>
+                <span class="modal-btn">Nueva partida</span>
+                <span class="modal-btn">Cancelar</span>
+                <p class="info">Ten en cuenta que al crear una nueva partida, se eliminará la existente ligada a tu nombre.</p>
+
+            </div>
+        </section>
         <form class="form">
             <h2 class="form-title">Ingreso al juego</h1>
                 <fieldset class="form-group">

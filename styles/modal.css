@@ -39,7 +39,7 @@
     font-size: 40px;
     font-weight: 700;
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 25px;
 }
 
 .modal-text{
@@ -55,8 +55,7 @@
     margin-bottom: 20px;
 }
 
-.modal-close{
-    text-decoration: none;
+.modal-btn{
     color: var(--blanco);
     background-color: var(--violeta);
     padding: 16px 48px;
@@ -65,10 +64,11 @@
     display:inline-block;
     font-weight: 300;
     transition: background-color .3s;
+    margin: 8px;
     cursor: pointer;
 }
 
-.modal-close:hover{
+.modal-btn:hover{
     color: var(--violeta);
     background-color: var(--blanco);
 }

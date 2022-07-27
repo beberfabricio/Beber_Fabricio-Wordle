@@ -89,3 +89,14 @@
     color: var(--violeta);
     background-color: var(--blanco);
 }
+
+.info{
+    margin-top: 5px;
+    text-align: center;
+    font-style: oblique;
+    color: gray;
+}
+
+#fecha,#hora,#nombre{
+    font-weight: bold;
+}

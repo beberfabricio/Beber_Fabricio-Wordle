@@ -6,7 +6,9 @@ function obtenerElementos(){
     inputs = document.querySelectorAll("input");
     filas = document.querySelectorAll("fieldset");
     modal = document.getElementById("sctModal");
-    modalClose = document.getElementsByClassName("modal-close")[0];
+    modalClose = document.getElementsByClassName("modal-btn")[0];
+    btnCargarP = document.getElementsByClassName("modal-btn")[1];
+    btnNuevaP = document.getElementsByClassName("modal-btn")[2];
     modalTitle = document.getElementsByClassName("modal-title")[0];
     modalText = document.getElementsByClassName("modal-text")[0];
     modalImage = document.getElementsByClassName("modal-img")[0];
@@ -19,9 +21,19 @@ function obtenerElementos(){
     btnContacto = document.getElementsByClassName("btnNav")[2];
     if (localStorage.partidasGuardadas != null) {
         guardadasLS = JSON.parse(localStorage.partidasGuardadas);
-    }else {
+    } else {
         guardadasLS = [];
     }
+    if (sessionStorage.partida != null) {
+        partidaCargada = JSON.parse(sessionStorage.partida);
+        nroPartida = parseInt(sessionStorage.nroPartida);
+        sessionStorage.removeItem("partida");
+        sessionStorage.removeItem("nroPartida");
+    } else {
+        partidaCargada = null;
+        nroPartida;
+    }
+
 }
 
 let palabra = "holas";
@@ -59,7 +71,7 @@ var color = {
     GRIS: 3
 }
 
-var partidaCargada = null;
+// var partidaCargada = null;
 var nroPartida;
 var cronometro;
 var mins;
@@ -67,25 +79,18 @@ var segs;
 
 window.onload = () => {
     obtenerElementos();
-    for (let i = 0; i < guardadasLS.length; i++) {
-        if (guardadasLS[i].jugador == sessionStorage.nombre) {
-            partidaCargada = guardadasLS[i];
-            nroPartida = i;
-        }
-    }
-    if (partidaCargada != null) {
+    // for (let i = 0; i < guardadasLS.length; i++) {
+    //     if (guardadasLS[i].jugador == sessionStorage.nombre) {
+    //         partidaCargada = guardadasLS[i];
+    //         nroPartida = i;
+    //     }
+    // }
+    // verificarPartida();
+    if (partidaCargada == null) {
+        crearPartidaNueva();
+    } else {
         cargarPartidaGuardada();
-    }else {
-        for (let i = 0; i < filas.length; i++) {
-            if (i != 0) {
-                filas[i].disabled = true;
-            }
-        }
-        iniciarCronometro(0,0);
-        inputs[0].focus();
-        inicio();
-    }        
-    pNombre.innerHTML = `Hola ${sessionStorage.nombre}`;
+    }
     inputs.forEach(x => x.onkeyup = saltarInput);
     btnGuardar.onclick = (e) => {
         e.preventDefault();
@@ -96,11 +101,45 @@ window.onload = () => {
         sessionStorage.clear();
         location = "./index.html";
     }
-    btnGanadores.onclick = () => location = "./ganadores.html";
-    btnContacto.onclick = () => location = "./contacto.html";
+    btnGanadores.onclick = () => location = "./winners.html";
+    btnContacto.onclick = () => location = "./contact.html";
+}
+
+// function verificarPartida() {
+//     if (partidaCargada != null) {
+//         mostrarModal("saved-game");
+//         btnCargarP.onclick = () => {
+//             cargarPartidaGuardada();
+//             modal.classList.remove("modal-show");
+//         }
+//         btnNuevaP.onclick = () => {
+//             crearPartidaNueva();
+//             modal.classList.remove("modal-show");
+//         }
+//     } else {
+//         crearPartidaNueva();
+//     }
+// }
+
+function crearPartidaNueva(){
+    // if (partidaCargada != null) {
+    //     guardadasLS.splice(nroPartida,1);
+    //     localStorage.partidasGuardadas = JSON.stringify(guardadasLS);
+    // }
+    pNombre.innerHTML = `Hola ${sessionStorage.nombre}`;
+
+    for (let i = 0; i < filas.length; i++) {
+        if (i != 0) {
+            filas[i].disabled = true;
+        }
+    }
+    iniciarCronometro(0,0);
+    inputs[0].focus();
+    inicio();
 }
 
 function cargarPartidaGuardada(){
+    palabra = partidaCargada.palabra;
     respuestas = partidaCargada.tablero;
     colorTablero = partidaCargada.color;
     let filaCargada = null;
@@ -126,6 +165,7 @@ function cargarPartidaGuardada(){
     pintarTablero();
     mins = partidaCargada.minutos;
     segs = partidaCargada.segundos;
+    pNombre.innerHTML = `Hola ${partidaCargada.jugador}`;
     iniciarCronometro(mins,segs);
     inicio();        
 }
@@ -222,11 +262,13 @@ function revisarResultado(respuesta,f){
 function siguienteFila(f,letrasCorrectas){
     filas[f].disabled = true;
     if (letrasCorrectas === palabra.length) {
+        detenerJuego();
         mostrarModal("win");
         return;
     }
     fSig = f + 1;
     if (fSig == 6) {
+        detenerJuego();
         mostrarModal("lose");
         return;
     }
@@ -241,6 +283,10 @@ function mostrarModal(resultado){
             modalTitle.innerHTML = "¡Ganaste!"
             modalTitle.style.color = "blue";
             modalText.innerHTML = "Acertaste! La palabra era " + palabra.toUpperCase() + ", tu partida ha quedado registrada.";
+            modalImage.classList.remove("hidden");
+            modalClose.classList.remove("hidden");
+            btnCargarP.classList.add("hidden");
+            btnNuevaP.classList.add("hidden");
             modal.classList.add("modal-show");
             guardarPartidaGanada();
         break;
@@ -249,13 +295,25 @@ function mostrarModal(resultado){
             modalTitle.innerHTML = "¡Perdiste!"
             modalTitle.style.color = "red";
             modalText.innerHTML = "La palabra era " + palabra.toUpperCase();
+            modalImage.classList.remove("hidden");
+            modalClose.classList.remove("hidden");
+            btnCargarP.classList.add("hidden");
+            btnNuevaP.classList.add("hidden");
             modal.classList.add("modal-show");
         break;
         case "save":
             modalImage.src = "images/saved_icon.png";
             modalTitle.innerHTML = "¡Partida guardada!"
             modalTitle.style.color = "green";
-            modalText.innerHTML = sessionStorage.nombre + ", tu partida ha sido guardada. Puedes cargarla ingresando tu nombre nuevamente.";
+            if (partidaCargada == null) {
+                modalText.innerHTML = sessionStorage.nombre + ", tu partida ha sido guardada. Puedes cargarla ingresando tu nombre nuevamente.";
+            } else {
+                modalText.innerHTML = partidaCargada.jugador + ", tu partida ha sido guardada. Puedes cargarla ingresando tu nombre nuevamente.";
+            }
+            modalImage.classList.remove("hidden");
+            modalClose.classList.remove("hidden");
+            btnCargarP.classList.add("hidden");
+            btnNuevaP.classList.add("hidden");
             modal.classList.add("modal-show");
         break;
         case "error":
@@ -264,6 +322,21 @@ function mostrarModal(resultado){
             modalTitle.innerHTML = "¡Error!"
             modalTitle.style.color = "red";
             modalText.innerHTML = "Aún no hay nada para guardar! Por favor, comienza a jugar para poder guardar la partida.";
+            modalImage.classList.remove("hidden");
+            modalClose.classList.remove("hidden");
+            btnCargarP.classList.add("hidden");
+            btnNuevaP.classList.add("hidden");
+            modal.classList.add("modal-show");
+        break;
+        case "saved-game":
+            clearInterval(cronometro);
+            modalTitle.innerHTML = "¡Partida encontrada!"
+            modalTitle.style.color = "green";
+            modalText.innerHTML = `Hola ${sessionStorage.nombre}, hemos encontrado una partida que has guardado anteriormente. ¿Quieres cargarla o quieres iniciar una nueva?`;
+            modalImage.classList.add("hidden");
+            modalClose.classList.add("hidden");
+            btnCargarP.classList.remove("hidden");
+            btnNuevaP.classList.remove("hidden");
             modal.classList.add("modal-show");
         break;
     }
@@ -277,7 +350,7 @@ function mostrarModal(resultado){
                 modal.classList.remove("modal-show");
             }
         }
-    }else {
+    } else {
         modalClose.onclick = function(){
             modal.classList.remove("modal-show");
             iniciarCronometro(mins,segs);
@@ -320,6 +393,7 @@ function guardarPartida(){
         return;
     }
     detenerJuego();
+    let fechaActual = new Date();
     let partida = {
         jugador: sessionStorage.nombre,
         palabra: palabra,
@@ -327,17 +401,15 @@ function guardarPartida(){
         color: colorTablero,
         minutos: mins,
         segundos: segs,
-        intentos: 3
+        fecha: fechaActual.toLocaleDateString(),
+        hora: fechaActual.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
-    // if (localStorage.partidasGuardadas == null) {
-    //     var partidasGuardadas = [];
-    // }else {
-    //     var partidasGuardadas = guardadasLS;
-    // }
+
     if (partidaCargada == null) {
         guardadasLS.push(partida);
         localStorage.partidasGuardadas = JSON.stringify(guardadasLS);
-    }else {
+    } else {
+        partida.jugador = partidaCargada.jugador;
         guardadasLS[nroPartida] = partida;
         localStorage.partidasGuardadas = JSON.stringify(guardadasLS);
     }
@@ -345,7 +417,6 @@ function guardarPartida(){
 }
 
 function guardarPartidaGanada(){
-    detenerJuego();
     let fechaActual = new Date();
     let ganada = {
         jugador: sessionStorage.nombre,
@@ -354,17 +425,20 @@ function guardarPartidaGanada(){
         color: colorTablero,
         minutos: mins,
         segundos: segs,
-        intentos: 3,
-        fecha: fechaActual.toLocaleDateString()
+        fecha: fechaActual.toLocaleDateString(),
+        hora: fechaActual.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
+
     if (localStorage.partidasGanadas == null) {
         var partidasGanadas = [];
-    }else {
+    } else {
         var partidasGanadas = JSON.parse(localStorage.partidasGanadas);
     }
+
     partidasGanadas.push(ganada);
     localStorage.partidasGanadas = JSON.stringify(partidasGanadas);
     if (partidaCargada != null) {
+        console.log(nroPartida);
         guardadasLS.splice(nroPartida,1);
         localStorage.partidasGuardadas = JSON.stringify(guardadasLS);
     }
