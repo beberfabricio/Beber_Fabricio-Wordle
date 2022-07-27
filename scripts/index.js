@@ -11,6 +11,7 @@ function obtenerElementos(){
     btnInicio = document.getElementsByClassName("btnNav")[0];
     btnGanadores = document.getElementsByClassName("btnNav")[1];
     btnContacto = document.getElementsByClassName("btnNav")[2];
+    btnCodigo = document.getElementsByClassName("btnNav")[3];
     if (localStorage.partidasGuardadas != null) {
         guardadasLS = JSON.parse(localStorage.partidasGuardadas);
     } else {
@@ -21,6 +22,7 @@ function obtenerElementos(){
 var partidaCargada;
 
 window.onload = () =>{
+    sessionStorage.clear();
     obtenerElementos();
     ocultarLabels();
     btnJugar.onclick = (e) => {
@@ -33,6 +35,7 @@ window.onload = () =>{
     btnInicio.onclick = () => location = "./index.html";
     btnGanadores.onclick = () => location = "./winners.html";
     btnContacto.onclick = () => location = "./contact.html";
+    btnCodigo.onclick = () => location.href = "https://github.com/beberfabricio/Beber_Fabricio-Wordle";
 }
 
 function verificarPartida() {

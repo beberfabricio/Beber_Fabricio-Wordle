@@ -7,8 +7,6 @@ function obtenerElementos(){
     filas = document.querySelectorAll("fieldset");
     modal = document.getElementById("sctModal");
     modalClose = document.getElementsByClassName("modal-btn")[0];
-    btnCargarP = document.getElementsByClassName("modal-btn")[1];
-    btnNuevaP = document.getElementsByClassName("modal-btn")[2];
     modalTitle = document.getElementsByClassName("modal-title")[0];
     modalText = document.getElementsByClassName("modal-text")[0];
     modalImage = document.getElementsByClassName("modal-img")[0];
@@ -19,6 +17,7 @@ function obtenerElementos(){
     btnInicio = document.getElementsByClassName("btnNav")[0];
     btnGanadores = document.getElementsByClassName("btnNav")[1];
     btnContacto = document.getElementsByClassName("btnNav")[2];
+    btnCodigo = document.getElementsByClassName("btnNav")[3];
     if (localStorage.partidasGuardadas != null) {
         guardadasLS = JSON.parse(localStorage.partidasGuardadas);
     } else {
@@ -71,7 +70,6 @@ var color = {
     GRIS: 3
 }
 
-// var partidaCargada = null;
 var nroPartida;
 var cronometro;
 var mins;
@@ -79,13 +77,6 @@ var segs;
 
 window.onload = () => {
     obtenerElementos();
-    // for (let i = 0; i < guardadasLS.length; i++) {
-    //     if (guardadasLS[i].jugador == sessionStorage.nombre) {
-    //         partidaCargada = guardadasLS[i];
-    //         nroPartida = i;
-    //     }
-    // }
-    // verificarPartida();
     if (partidaCargada == null) {
         crearPartidaNueva();
     } else {
@@ -97,35 +88,13 @@ window.onload = () => {
         gifLoad.classList.toggle("hidden",false);
         setTimeout(guardarPartida,500);
     }
-    btnInicio.onclick = () => {
-        sessionStorage.clear();
-        location = "./index.html";
-    }
+    btnInicio.onclick = () => location = "./index.html";
     btnGanadores.onclick = () => location = "./winners.html";
     btnContacto.onclick = () => location = "./contact.html";
+    btnCodigo.onclick = () => location.href = "https://github.com/beberfabricio/Beber_Fabricio-Wordle";
 }
 
-// function verificarPartida() {
-//     if (partidaCargada != null) {
-//         mostrarModal("saved-game");
-//         btnCargarP.onclick = () => {
-//             cargarPartidaGuardada();
-//             modal.classList.remove("modal-show");
-//         }
-//         btnNuevaP.onclick = () => {
-//             crearPartidaNueva();
-//             modal.classList.remove("modal-show");
-//         }
-//     } else {
-//         crearPartidaNueva();
-//     }
-// }
-
 function crearPartidaNueva(){
-    // if (partidaCargada != null) {
-    //     guardadasLS.splice(nroPartida,1);
-    //     localStorage.partidasGuardadas = JSON.stringify(guardadasLS);
-    // }
     pNombre.innerHTML = `Hola ${sessionStorage.nombre}`;
 
     for (let i = 0; i < filas.length; i++) {
@@ -283,10 +252,6 @@ function mostrarModal(resultado){
             modalTitle.innerHTML = "¡Ganaste!"
             modalTitle.style.color = "blue";
             modalText.innerHTML = "Acertaste! La palabra era " + palabra.toUpperCase() + ", tu partida ha quedado registrada.";
-            modalImage.classList.remove("hidden");
-            modalClose.classList.remove("hidden");
-            btnCargarP.classList.add("hidden");
-            btnNuevaP.classList.add("hidden");
             modal.classList.add("modal-show");
             guardarPartidaGanada();
         break;
@@ -295,10 +260,6 @@ function mostrarModal(resultado){
             modalTitle.innerHTML = "¡Perdiste!"
             modalTitle.style.color = "red";
             modalText.innerHTML = "La palabra era " + palabra.toUpperCase();
-            modalImage.classList.remove("hidden");
-            modalClose.classList.remove("hidden");
-            btnCargarP.classList.add("hidden");
-            btnNuevaP.classList.add("hidden");
             modal.classList.add("modal-show");
         break;
         case "save":
@@ -310,10 +271,6 @@ function mostrarModal(resultado){
             } else {
                 modalText.innerHTML = partidaCargada.jugador + ", tu partida ha sido guardada. Puedes cargarla ingresando tu nombre nuevamente.";
             }
-            modalImage.classList.remove("hidden");
-            modalClose.classList.remove("hidden");
-            btnCargarP.classList.add("hidden");
-            btnNuevaP.classList.add("hidden");
             modal.classList.add("modal-show");
         break;
         case "error":
@@ -322,21 +279,6 @@ function mostrarModal(resultado){
             modalTitle.innerHTML = "¡Error!"
             modalTitle.style.color = "red";
             modalText.innerHTML = "Aún no hay nada para guardar! Por favor, comienza a jugar para poder guardar la partida.";
-            modalImage.classList.remove("hidden");
-            modalClose.classList.remove("hidden");
-            btnCargarP.classList.add("hidden");
-            btnNuevaP.classList.add("hidden");
-            modal.classList.add("modal-show");
-        break;
-        case "saved-game":
-            clearInterval(cronometro);
-            modalTitle.innerHTML = "¡Partida encontrada!"
-            modalTitle.style.color = "green";
-            modalText.innerHTML = `Hola ${sessionStorage.nombre}, hemos encontrado una partida que has guardado anteriormente. ¿Quieres cargarla o quieres iniciar una nueva?`;
-            modalImage.classList.add("hidden");
-            modalClose.classList.add("hidden");
-            btnCargarP.classList.remove("hidden");
-            btnNuevaP.classList.remove("hidden");
             modal.classList.add("modal-show");
         break;
     }

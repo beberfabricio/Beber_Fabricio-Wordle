@@ -18,9 +18,30 @@
                 <a class="btnNav">Inicio</a>
                 <a class="btnNav">Ganadores</a>
                 <a class="btnNav">Contacto</a>
-                <a class="btnNav" target="_blank" href="https://github.com/beberfabricio/Beber_Fabricio-Wordle">Código</a>
+                <a class="btnNav">Código</a>
             </nav>
         </header>
+        <form class="form">
+            <h2 class="form-title">Contáctenos</h1>
+            <div class="form-container">
+                <fieldset class="form-group">
+                    <input class="form-txt" type="text" id="txtNombre" placeholder=" ">
+                    <label class="form-lblTxt" for="txtNombre">Nombre</label>                    
+                    <label class="form-lblError hidden" for="txtNombre">Ingrese al menos 3 caracteres</label>
+                </fieldset>
+                <fieldset class="form-group">
+                    <input class="form-txt" type="text" id="txtEmail" placeholder=" ">
+                    <label class="form-lblTxt" for="txtEmail">E-mail</label>
+                    <label class="form-lblError hidden" for="txtEmail">Ingrese un email válido</label>
+                </fieldset>
+                <fieldset class="form-group">
+                    <textarea class="form-txt" id="txtMensaje" cols="30" rows="3" placeholder=" "></textarea>
+                    <label class="form-lblTxt" for="txtMensaje">Mensaje</label>
+                    <label class="form-lblError hidden" for="txtMensaje">Ingrese al menos 6 caracteres</label>
+                </fieldset>
+                <input class="form-btn" type="submit" value="Enviar" id="btnEnviar">
+            </div>
+        </form>
         <footer>
             <p>
                 Final LPPA ISI UAI (Universidad Abierta Interamericana) 2022
