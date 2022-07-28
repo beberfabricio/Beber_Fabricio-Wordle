@@ -84,6 +84,7 @@ window.onload = () => {
         cargarPartidaGuardada();
     }
     inputs.forEach(x => x.onkeyup = saltarInput);
+    inputs.forEach(x => x.onkeydown = verificarBorrar);
     btnGuardar.onclick = (e) => {
         e.preventDefault();
         gifLoad.classList.toggle("hidden",false);
@@ -97,7 +98,6 @@ window.onload = () => {
 
 function crearPartidaNueva(){
     pNombre.innerHTML = `Hola ${sessionStorage.nombre}`;
-
     for (let i = 0; i < filas.length; i++) {
         if (i != 0) {
             filas[i].disabled = true;
@@ -126,11 +126,10 @@ function cargarPartidaGuardada(){
                     }
                     document.getElementById(`f${f}c0`).focus();
                 }
-            }else {
+            } else {
                 input.value = respuestas[f][c];
             }
         }
-
     }
     pintarTablero();
     mins = partidaCargada.minutos;
@@ -142,11 +141,23 @@ function cargarPartidaGuardada(){
 
 function saltarInput(e){
     if (e.keyCode === 32) { //SPACE
-        if (e.target.value.length === 1) {
+        if (e.target.value == " ") {
             e.target.value = "";
         }
         return;
     }
+    if (e.target.value.length == 1) {
+        let next = e.target.nextElementSibling;
+        if (!next) {
+            return;
+        }
+        if (next.tagName.toLowerCase() === "input") {
+            next.focus();
+        }
+    }
+}
+
+function verificarBorrar(e){
     if (e.keyCode === 8) { //BACKSPACE
         if (e.target.value.length === 1) {
             return;
@@ -158,15 +169,6 @@ function saltarInput(e){
         if (prev.tagName.toLowerCase() === "input") {
             prev.value = "";
             prev.focus();
-        }
-    }
-    if (e.target.value.length == 1) {
-        let next = e.target.nextElementSibling;
-        if (!next) {
-            return;
-        }
-        if (next.tagName.toLowerCase() === "input") {
-            next.focus();
         }
     }
 }
@@ -204,6 +206,10 @@ function guardarRespuesta(f){
     respuestas[f] = [];
     for (let c = 0; c < matriz[c].length; c++) {
         let input = document.getElementById(`f${f}c${c}`);
+        console.log(input.value);
+        if (input.value == "" || input.value == " ") {
+            return;
+        }
         respuestas[f].push(input.value);
     }
     revisarResultado(respuestas[f],f);
@@ -214,16 +220,13 @@ function revisarResultado(respuesta,f){
     var letrasCorrectas = 0;
     palabraArray.forEach(function(x,i){
         if (x === respuesta[i]) {
-            colorTablero[f][i] = 1;
+            colorTablero[f][i] = color.VERDE;
             letrasCorrectas++;
-        }else
-        {
-            if (palabraArray.includes(respuesta[i])) {
-                colorTablero[f][i] = 2;
-            }else{
-                colorTablero[f][i] = 3;
+        } else if (palabraArray.includes(respuesta[i])) {
+            colorTablero[f][i] = color.AMARILLO;
+            } else {
+            colorTablero[f][i] = color.GRIS;
             }
-        }
     })
     pintarTablero();
     siguienteFila(f,letrasCorrectas);
