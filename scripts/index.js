@@ -3,11 +3,12 @@ function obtenerElementos(){
     nombre = document.getElementById("txtNombre");
     gifLoad = document.getElementsByClassName("form-img")[0];
     modal = document.getElementById("sctModal");
-    btnCargarP = document.getElementsByClassName("modal-btn")[0];
-    btnNuevaP = document.getElementsByClassName("modal-btn")[1];
-    btnCancelar = document.getElementsByClassName("modal-btn")[2];
+    modalTable = document.getElementById("table");
+    modalCancelar = document.getElementsByClassName("modal-btn")[0];
     modalTitle = document.getElementsByClassName("modal-title")[0];
     modalText = document.getElementsByClassName("modal-text")[0];
+    modalLoading = document.getElementsByClassName("gif")[0];
+    modalLoadingT = document.getElementsByClassName("text")[0];
     btnInicio = document.getElementsByClassName("btnNav")[0];
     btnGanadores = document.getElementsByClassName("btnNav")[1];
     btnContacto = document.getElementsByClassName("btnNav")[2];
@@ -21,55 +22,29 @@ function obtenerElementos(){
 
 var partidaCargada;
 
-window.onload = () =>{
+window.onload = () => {
     sessionStorage.clear();
     obtenerElementos();
     ocultarLabels();
     btnJugar.onclick = (e) => {
         e.preventDefault();
-        if (validarCampos()) {
+        if (nombre.value == "") {
+            mostrarModal();
+            modalTable.classList.add("hidden");
+            modalTitle.classList.add("hidden");
+            modalCancelar.classList.add("hidden");
+            modalLoading.classList.remove("hidden");
+            modalLoadingT.classList.remove("hidden");
+            setTimeout(mostrarPartidasGuardadas,500);
+        } else if (validarCampos()) {
             gifLoad.classList.remove("hidden");
-            setTimeout(verificarPartida,500);
+            setTimeout(jugar,500);
         }
     }
     btnInicio.onclick = () => location = "./index.html";
     btnGanadores.onclick = () => location = "./winners.html";
     btnContacto.onclick = () => location = "./contact.html";
     btnCodigo.onclick = () => location.href = "https://github.com/beberfabricio/Beber_Fabricio-Wordle";
-}
-
-function verificarPartida() {
-    let nroPartida;
-    partidaCargada = null;
-
-    for (let i = 0; i < guardadasLS.length; i++) {
-        if (guardadasLS[i].jugador.toLowerCase() == nombre.value.toLowerCase()) {
-            partidaCargada = guardadasLS[i];
-            nroPartida = i;
-        }
-    }
-
-    if (partidaCargada != null) {
-        mostrarModal();
-        gifLoad.classList.add("hidden");
-        btnCargarP.onclick = () => {
-            sessionStorage.partida = JSON.stringify(partidaCargada);
-            sessionStorage.nroPartida = nroPartida;
-            jugar();
-        }
-        btnNuevaP.onclick = () => {
-            guardadasLS.splice(nroPartida,1);
-            localStorage.partidasGuardadas = JSON.stringify(guardadasLS);
-            jugar();
-        }
-        btnCancelar.onclick = () => {
-            sessionStorage.removeItem("nombre");
-            nombre.value = "";
-            modal.classList.remove("modal-show");
-        }
-    } else {
-        jugar();
-    }
 }
 
 function jugar(){
@@ -79,7 +54,7 @@ function jugar(){
 
 function validarCampos() {
     validate = true;
-    if (nombre.value.length < 3) {
+    if (nombre.value.length < 3 && nombre.value != "") {
         nombre.labels[1].classList.toggle("hidden",false);
         validate = false;
     }
@@ -93,11 +68,70 @@ function ocultarLabels(){
 }
 
 function mostrarModal(){
-    modalTitle.innerHTML = "¡Partida encontrada!"
-    modalTitle.style.color = "green";
-    modalText.style.fontWeight = 400;
-    document.getElementById("nombre").innerHTML = partidaCargada.jugador;
-    document.getElementById("fecha").innerHTML = partidaCargada.fecha;
-    document.getElementById("hora").innerHTML = partidaCargada.hora;
     modal.classList.add("modal-show");
+    modalCancelar.onclick = () => {        
+        modal.classList.remove("modal-show");
+    }
+    window.onclick = function(e) {
+        if (e.target == modal) {
+            modal.classList.remove("modal-show");
+        }
+    }
+}
+
+function llenarTabla(){
+    let head = `
+    <tr><th>ID</th>
+    <th>Jugador</th>
+    <th>Tiempo</th>
+    <th>Fecha</th></tr>`;
+    let body = "";
+    for (let i = 0; i < guardadasLS.length; i++) {
+        body += `
+        <tr name="partida"><td>${i}</td>
+        <td>${guardadasLS[i].jugador}</td>
+        <td>${guardadasLS[i].minutos.toString().padStart(2,"0")}:${guardadasLS[i].segundos.toString().padStart(2,"0")}</td>
+        <td>${guardadasLS[i].fecha} - ${guardadasLS[i].hora}</td></tr>`;
+    }
+    document.getElementById("encabezado").innerHTML = head;
+    document.getElementById("contenido").innerHTML = body;
+}
+
+function mostrarPartidasGuardadas(){
+    if (guardadasLS == null || guardadasLS.length == 0) {
+        noExistenPartidas();
+        return;
+    }
+    llenarTabla();
+    let tr = document.getElementsByName("partida");
+    tr.forEach(x => {
+        x.onclick = (e) => {
+            let id = e.path[1].innerHTML.split(">")[1];
+            id = id.toString().split("<")[0];
+            partidaCargada = guardadasLS[id];
+            sessionStorage.partida = JSON.stringify(partidaCargada);
+            sessionStorage.nroPartida = id;
+            jugar();
+        }
+    });
+    existenPartidas();
+}
+
+function noExistenPartidas(){
+    modalLoading.classList.add("hidden");
+    modalLoadingT.classList.add("hidden");
+    modalTitle.innerHTML = "No existe ninguna partida guardada :/";
+    modalTitle.style.fontSize = "35px";
+    modalTitle.style.marginTop = "70px";
+    modalTitle.classList.remove("hidden");
+    modalCancelar.classList.remove("hidden");
+}
+
+function existenPartidas(){
+    modalLoading.classList.add("hidden");
+    modalLoadingT.classList.add("hidden");
+    modalTitle.innerHTML = "Partidas guardadas";
+    modalTitle.classList.remove("hidden");
+    modalCancelar.classList.remove("hidden");
+    modalTable.classList.remove("hidden");
 }

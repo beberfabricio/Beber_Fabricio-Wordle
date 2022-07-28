@@ -24,15 +24,14 @@
         </header>
         <section class="modal" id="sctModal">
             <div class="modal-container">
-                <h2 class="modal-title"></h2>
-                <p class="modal-text">Hola <span id="nombre"></span>, hemos encontrado una partida que has guardado el 
-                día <span id="fecha"></span> a las <span id="hora"></span> hs.</p>
-                <p class="modal-text">¿Quieres cargarla o quieres iniciar una nueva?</p>
-                <span class="modal-btn">Cargar partida</span>
-                <span class="modal-btn">Nueva partida</span>
+                <h2 class="modal-title hidden"></h2>
+                <img class="gif hidden" src="images/loading.gif" alt="loading logo">
+                <p class="text hidden">Obteniendo datos...</p>
+                <table id="table">
+                    <thead id="encabezado"></thead>
+                    <tbody id="contenido"></tbody>
+                </table>
                 <span class="modal-btn">Cancelar</span>
-                <p class="info">Ten en cuenta que al crear una nueva partida, se eliminará la existente ligada a tu nombre.</p>
-
             </div>
         </section>
         <form class="form">
@@ -43,6 +42,7 @@
                     <label class="form-lblError hidden" for="txtNombre">Ingrese un nombre válido</label>
                 </fieldset>
                 <input class="form-btn" type="submit" value="¡JUGAR!" id="btnJugar">
+                <p class="info">Si quieres cargar una partida, deja el nombre en blanco.</p>
                 <img class="form-img hidden" src="images/loading.gif" alt="loading logo">
             </div>
         </form>

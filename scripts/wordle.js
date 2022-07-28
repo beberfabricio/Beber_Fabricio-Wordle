@@ -28,6 +28,7 @@ function obtenerElementos(){
         nroPartida = parseInt(sessionStorage.nroPartida);
         sessionStorage.removeItem("partida");
         sessionStorage.removeItem("nroPartida");
+        sessionStorage.nombre = partidaCargada.jugador;
     } else {
         partidaCargada = null;
         nroPartida;

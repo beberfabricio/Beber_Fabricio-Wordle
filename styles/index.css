@@ -100,3 +100,50 @@
 #fecha,#hora,#nombre{
     font-weight: bold;
 }
+
+table{
+    text-align: left;
+    background-color: var(--blanco);
+    border-collapse: collapse;
+    width: 95%;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+th,td{
+    padding: 10px;
+    border: solid 1px var(--negro);
+}
+
+thead{
+    font-weight: 700;
+    background-color: var(--violeta);
+    border-bottom: solid 5px var(--violetaOscuro);
+    color:var(--blanco);
+}
+
+tr:nth-child(even){
+    background-color: var(--gris);
+}
+
+tr:hover td{
+    background-color: var(--violetaClaro);
+    color:var(--blanco);
+    cursor:pointer;
+}
+
+.text{
+    padding: 20px;
+    border-radius: 15px;
+    color:var(--negro);
+    background-color: var(--gris);
+    font-size: 35px;
+    font-weight: 700;
+    margin-top: 25px;
+}
+
+.gif{
+    width: 160px;
+    margin-top: 75px;
+    text-align: center;
+}
