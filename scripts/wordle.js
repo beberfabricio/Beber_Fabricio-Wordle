@@ -210,7 +210,7 @@ function guardarRespuesta(f){
         if (input.value == "" || input.value == " ") {
             return;
         }
-        respuestas[f].push(input.value);
+        respuestas[f].push(input.value.toLowerCase());
     }
     revisarResultado(respuestas[f],f);
 }
@@ -271,9 +271,9 @@ function mostrarModal(resultado){
             modalTitle.innerHTML = "¡Partida guardada!"
             modalTitle.style.color = "green";
             if (partidaCargada == null) {
-                modalText.innerHTML = sessionStorage.nombre + ", tu partida ha sido guardada. Puedes cargarla ingresando tu nombre nuevamente.";
+                modalText.innerHTML = sessionStorage.nombre + ", tu partida ha sido guardada. Puedes cargarla desde el menú de inicio.";
             } else {
-                modalText.innerHTML = partidaCargada.jugador + ", tu partida ha sido guardada. Puedes cargarla ingresando tu nombre nuevamente.";
+                modalText.innerHTML = partidaCargada.jugador + ", tu partida ha sido guardada. Puedes cargarla desde el menú de inicio.";
             }
             modal.classList.add("modal-show");
         break;
