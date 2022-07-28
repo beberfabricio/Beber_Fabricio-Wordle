@@ -19,7 +19,7 @@ body{
 header{
     width: 100%;
     height: 100px;
-    padding: 0px 50px;
+    padding: 0px 30px;
     margin-bottom: 15px;
     display: flex;
     justify-content: space-between;
@@ -28,6 +28,7 @@ header{
 }
 
 header h1{
+    width: 100%;
     font-weight: 700;
     font-size: 40px;
     color:var(--blanco);
@@ -36,8 +37,13 @@ header h1{
 header nav{
     display:inherit;
     align-items: center;
-    justify-content: space-around;
+    justify-content: flex-end;
     width: 400px;
+}
+
+header nav .icoNav{
+    font-size: 30px;
+    transition: color .3s, transform .3s;
 }
 
 header nav .btnNav{
@@ -46,9 +52,10 @@ header nav .btnNav{
     font-size: 22px;
     color:var(--negro);
     transition: color .3s;
+    display:none;
 }
 
-header nav .btnNav:hover{
+header nav .btnNav:hover,header nav i:hover{
     color: var(--blanco);
     cursor: pointer;
 }
@@ -88,4 +95,23 @@ footer p{
 
 .blanco{
     background-color: white;
+}
+
+@media only screen and (min-width: 768px) {
+    header{
+        padding: 0px 50px;
+    }
+    header h1{
+        width: 40%;
+        font-size: 50px;
+    }
+    header nav{
+        justify-content: space-around;
+    }
+    header nav .btnNav{
+        display: block;
+    }
+    header nav .icoNav{
+        display: none;
+    }
 }
