@@ -202,13 +202,13 @@ function inicio(){
 }
 
 function guardarRespuesta(f){
-    respuestas[f] = [];
+
     for (let c = 0; c < matriz[c].length; c++) {
         let input = document.getElementById(`f${f}c${c}`);
         if (input.value == "" || input.value == " ") {
             return;
         }
-        respuestas[f].push(input.value.toLowerCase());
+        respuestas[f][c] = input.value.toLowerCase();
     }
     revisarRespuesta(respuestas[f],f);
 }
