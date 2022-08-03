@@ -36,8 +36,7 @@ function obtenerElementos(){
 
 }
 
-let palabra = "holas";
-
+var palabra;
 var matriz = [
     [0,0,0,0,0],
     [0,0,0,0,0],
@@ -46,7 +45,6 @@ var matriz = [
     [0,0,0,0,0],
     [0,0,0,0,0]
 ];
-
 var respuestas = [
     [0,0,0,0,0],
     [0,0,0,0,0],
@@ -55,7 +53,6 @@ var respuestas = [
     [0,0,0,0,0],
     [0,0,0,0,0]
 ];
-
 var colorTablero = [
     [0,0,0,0,0],
     [0,0,0,0,0],
@@ -64,13 +61,11 @@ var colorTablero = [
     [0,0,0,0,0],
     [0,0,0,0,0]
 ];
-
 var color = {
     VERDE: 1,
     AMARILLO: 2,
     GRIS: 3
 }
-
 var nroPartida;
 var cronometro;
 var mins;
@@ -97,6 +92,7 @@ window.onload = () => {
 }
 
 function crearPartidaNueva(){
+    setearPalabraRandom();
     pNombre.innerHTML = `Hola ${sessionStorage.nombre}`;
     for (let i = 0; i < filas.length; i++) {
         if (i != 0) {
@@ -212,10 +208,10 @@ function guardarRespuesta(f){
         }
         respuestas[f].push(input.value.toLowerCase());
     }
-    revisarResultado(respuestas[f],f);
+    revisarRespuesta(respuestas[f],f);
 }
 
-function revisarResultado(respuesta,f){
+function revisarRespuesta(respuesta,f){
     let palabraArray = Array.from(palabra);
     var letrasCorrectas = 0;
     palabraArray.forEach(function(x,i){
@@ -237,12 +233,15 @@ function siguienteFila(f,letrasCorrectas){
     if (letrasCorrectas === palabra.length) {
         detenerJuego();
         mostrarModal("win");
+        guardarPartidaGanada();
+        sessionStorage.removeItem("nombre");
         return;
     }
     fSig = f + 1;
     if (fSig == 6) {
         detenerJuego();
         mostrarModal("lose");
+        sessionStorage.removeItem("nombre");
         return;
     }
     filas[fSig].disabled = false;
@@ -257,7 +256,7 @@ function mostrarModal(resultado){
             modalTitle.style.color = "blue";
             modalText.innerHTML = "Acertaste! La palabra era " + palabra.toUpperCase() + ", tu partida ha quedado registrada.";
             modal.classList.add("modal-show");
-            guardarPartidaGanada();
+            
         break;
         case "lose":
             modalImage.src = "images/error_icon.png";
@@ -350,7 +349,6 @@ function guardarPartida(){
         fecha: fechaActual.toLocaleDateString(),
         hora: fechaActual.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
-
     if (partidaCargada == null) {
         guardadasLS.push(partida);
         localStorage.partidasGuardadas = JSON.stringify(guardadasLS);
@@ -360,6 +358,7 @@ function guardarPartida(){
         localStorage.partidasGuardadas = JSON.stringify(guardadasLS);
     }
     mostrarModal("save");
+    sessionStorage.removeItem("nombre");
 }
 
 function guardarPartidaGanada(){
@@ -374,13 +373,11 @@ function guardarPartidaGanada(){
         fecha: fechaActual.toLocaleDateString(),
         hora: fechaActual.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
-
     if (localStorage.partidasGanadas == null) {
         var partidasGanadas = [];
     } else {
         var partidasGanadas = JSON.parse(localStorage.partidasGanadas);
     }
-
     partidasGanadas.push(ganada);
     localStorage.partidasGanadas = JSON.stringify(partidasGanadas);
     if (partidaCargada != null) {
@@ -388,4 +385,14 @@ function guardarPartidaGanada(){
         guardadasLS.splice(nroPartida,1);
         localStorage.partidasGuardadas = JSON.stringify(guardadasLS);
     }
+}
+
+function setearPalabraRandom(){
+    fetch("./data/words.json")
+        .then(response => response.json())
+        .then(palabras => {
+            console.log("Palabra cargada!");
+            palabra = palabras[Math.floor(Math.random() * palabras.length)];
+        })
+        .catch(error => console.log(error))
 }
