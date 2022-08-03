@@ -30,7 +30,7 @@ window.onload = () => {
     loading.classList.remove("hidden");
     texto.classList.remove("hidden");
     sessionStorage.clear();
-    btnInicio.onclick = () => ordenarGanadores();
+    btnInicio.onclick = () => location = "./index.html";
     btnGanadores.onclick = () => location = "./winners.html";
     btnContacto.onclick = () => location = "./contact.html";
     btnCodigo.onclick = () => location.href = "https://github.com/beberfabricio/Beber_Fabricio-Wordle";
