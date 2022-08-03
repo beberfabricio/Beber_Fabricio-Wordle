@@ -8,6 +8,7 @@ function obtenerElementos(){
     modal = document.getElementById("sctModal");
     modalClose = document.getElementsByClassName("modal-btn")[0];
     modalTitle = document.getElementsByClassName("modal-title")[0];
+    modalPoints = document.getElementsByClassName("modal-points")[0];
     titulo = document.querySelectorAll("h2")[1];
     if (localStorage.partidasGanadas == null) {
         ganadasLS = null;
@@ -29,7 +30,7 @@ window.onload = () => {
     loading.classList.remove("hidden");
     texto.classList.remove("hidden");
     sessionStorage.clear();
-    btnInicio.onclick = () => location = "./index.html";
+    btnInicio.onclick = () => ordenarGanadores();
     btnGanadores.onclick = () => location = "./winners.html";
     btnContacto.onclick = () => location = "./contact.html";
     btnCodigo.onclick = () => location.href = "https://github.com/beberfabricio/Beber_Fabricio-Wordle";
@@ -53,7 +54,8 @@ function llenarTabla(){
     <th>Jugador</th>
     <th>Palabra</th>
     <th>Tiempo</th>
-    <th>Fecha</th></tr>`;
+    <th class="table-click" onclick=ordenarPuntaje()>Puntos</th>
+    <th class="table-click" onclick=ordenarFecha()>Fecha</th></tr>`;
     let body = "";
     for (let i = 0; i < ganadasLS.length; i++) {
         body += `
@@ -61,6 +63,7 @@ function llenarTabla(){
         <td>${ganadasLS[i].jugador}</td>
         <td>${ganadasLS[i].palabra.toUpperCase()}</td>
         <td>${ganadasLS[i].minutos.toString().padStart(2,"0")}:${ganadasLS[i].segundos.toString().padStart(2,"0")}</td>
+        <td>${ganadasLS[i].puntaje}</td>
         <td>${ganadasLS[i].fecha} - ${ganadasLS[i].hora}</td></tr>`;
     }
     document.getElementById("encabezado").innerHTML = head;
@@ -78,6 +81,7 @@ function llenarTabla(){
 function mostrarModal(id){
     llenarTablero(id);
     modalTitle.innerHTML = `Tablero de ${ganadasLS[id].jugador}`;
+    modalPoints.innerHTML = `Puntaje: ${ganadasLS[id].puntaje} / 3000`;
     modal.classList.add("modal-show");
     modalClose.onclick = function(){
         modal.classList.remove("modal-show");
@@ -128,4 +132,16 @@ function llenarTablero(id){
             }
         }
     }
+}
+
+function ordenarPuntaje(){
+    ganadasLS.sort((a,b) => {
+        return b.puntaje - a.puntaje
+    });
+    llenarTabla();
+}
+
+function ordenarFecha(){
+    ganadasLS = JSON.parse(localStorage.partidasGanadas);
+    llenarTabla();
 }

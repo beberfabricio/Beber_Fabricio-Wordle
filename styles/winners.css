@@ -85,5 +85,18 @@ tr:hover td{
 }
 
 .modal-btn{
-    margin-top: 20px;
+    margin-top: 10px;
+}
+
+.modal-points{
+    font-size: 20px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--azul);
+    margin: 15px 0;
+}
+
+.table-click:hover{
+    color: var(--azul);
+    cursor: pointer;
 }

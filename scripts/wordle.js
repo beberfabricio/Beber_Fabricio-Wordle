@@ -66,6 +66,7 @@ var color = {
     AMARILLO: 2,
     GRIS: 3
 }
+var intentos;
 var nroPartida;
 var cronometro;
 var mins;
@@ -99,6 +100,7 @@ function crearPartidaNueva(){
             filas[i].disabled = true;
         }
     }
+    intentos = 6;
     iniciarCronometro(0,0);
     inputs[0].focus();
     inicio();
@@ -106,6 +108,7 @@ function crearPartidaNueva(){
 
 function cargarPartidaGuardada(){
     palabra = partidaCargada.palabra;
+    intentos = partidaCargada.intentosRestantes;
     respuestas = partidaCargada.tablero;
     colorTablero = partidaCargada.color;
     let filaCargada = null;
@@ -202,7 +205,6 @@ function guardarRespuesta(f){
     respuestas[f] = [];
     for (let c = 0; c < matriz[c].length; c++) {
         let input = document.getElementById(`f${f}c${c}`);
-        console.log(input.value);
         if (input.value == "" || input.value == " ") {
             return;
         }
@@ -214,6 +216,7 @@ function guardarRespuesta(f){
 function revisarRespuesta(respuesta,f){
     let palabraArray = Array.from(palabra);
     var letrasCorrectas = 0;
+    intentos = 5 - f;
     palabraArray.forEach(function(x,i){
         if (x === respuesta[i]) {
             colorTablero[f][i] = color.VERDE;
@@ -252,9 +255,9 @@ function mostrarModal(resultado){
     switch (resultado) {
         case "win":
             modalImage.src = "images/success_icon.png";
-            modalTitle.innerHTML = "¡Ganaste!"
+            modalTitle.innerHTML = "¡Acertaste!"
             modalTitle.style.color = "blue";
-            modalText.innerHTML = "Acertaste! La palabra era " + palabra.toUpperCase() + ", tu partida ha quedado registrada.";
+            modalText.innerHTML = "Has obtenido " + (500 * (intentos + 1) - (mins * 60 + segs)) + " puntos, tu partida ha quedado registrada.";
             modal.classList.add("modal-show");
             
         break;
@@ -346,6 +349,7 @@ function guardarPartida(){
         color: colorTablero,
         minutos: mins,
         segundos: segs,
+        intentosRestantes: intentos,
         fecha: fechaActual.toLocaleDateString(),
         hora: fechaActual.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
@@ -370,8 +374,9 @@ function guardarPartidaGanada(){
         color: colorTablero,
         minutos: mins,
         segundos: segs,
+        puntaje: (500 * (intentos + 1) - (mins * 60 + segs)),
         fecha: fechaActual.toLocaleDateString(),
-        hora: fechaActual.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        hora: fechaActual.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
     }
     if (localStorage.partidasGanadas == null) {
         var partidasGanadas = [];
@@ -381,7 +386,6 @@ function guardarPartidaGanada(){
     partidasGanadas.push(ganada);
     localStorage.partidasGanadas = JSON.stringify(partidasGanadas);
     if (partidaCargada != null) {
-        console.log(nroPartida);
         guardadasLS.splice(nroPartida,1);
         localStorage.partidasGuardadas = JSON.stringify(guardadasLS);
     }
@@ -391,7 +395,6 @@ function setearPalabraRandom(){
     fetch("./data/words.json")
         .then(response => response.json())
         .then(palabras => {
-            console.log("Palabra cargada!");
             palabra = palabras[Math.floor(Math.random() * palabras.length)];
         })
         .catch(error => console.log(error))
